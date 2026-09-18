@@ -1,6 +1,6 @@
 # 江南大学计算机学院实验报告 Typst 模板
 
-这是一个基于 [Typst](https://typst.app/) 的江南大学人工智能与计算机学院实验报告模板。模板支持导出 PDF，并通过 `typ2docx` 将报告转换为可编辑的 DOCX 文件。旨在减少使用 Word 类软件排版时所浪费的时间，并且 AI Agent Friendly。
+这是一个基于 [Typst](https://typst.app/) 的江南大学人工智能与计算机学院实验报告模板。模板支持导出 PDF，并通过 `typ2docx` 将报告转换为可编辑的 DOCX 文件，适合手动填写，也适合交给 AI Agent 根据实验材料自动生成。
 
 仓库同时是一个可供 Codex 使用的 skill。安装后，可以让 Codex 根据实验材料创建、填写、修改并导出符合本模板版式的实验报告。
 
@@ -13,13 +13,17 @@
 ```text
 .
 ├── report.typ                 # 报告源文件，主要编辑此文件
-├── report.pdf                 # PDF 导出结果
-├── report.docx                # DOCX 导出结果
-├── SKILL.md                   # Codex skill 的入口和工作流程
 ├── Makefile                   # 常用构建命令
 ├── scripts/typ2docx-safe.py   # DOCX 转换和版式修复脚本
-└── assets/                    # 报告中使用的图片等资源
+├── SKILL.md                   # Codex skill 的入口和工作流程
+├── example_image.png          # 报告中的示例图片
+├── example.pdf                # 示例 PDF
+├── example.docx               # 示例 DOCX
+├── preview.png                # README 预览图
+└── LICENSE                    # MIT 许可证
 ```
+
+运行构建命令后，会在项目根目录生成 `report.pdf` 和 `report.docx`。这两个文件属于构建产物，已加入 `.gitignore`；报告中使用的其他图片可以按需放入 `assets/` 目录。
 
 ## 安装为 Codex Skill
 
@@ -64,7 +68,7 @@ $jnu-cs-lab-report-typst 根据这些实验要求和代码生成实验报告，�
 - [uv](https://docs.astral.sh/uv/)（用于自动准备 DOCX 转换依赖）
 - 可用的中文字体，例如宋体（`SimSun`）
 
-只生成 DOCX：
+生成 DOCX（会先生成 PDF 作为转换中间文件）：
 
 ```bash
 make docx
@@ -97,6 +101,8 @@ typst compile report.typ report.pdf
 - 实验目的、实验内容、程序清单
 - 运行情况和实验体会
 
+`report.typ` 中的身份信息和正文是示例内容，提交报告前请替换为自己的信息。除非确实需要改变报告外观，否则不要修改“版式定义”区域。
+
 程序清单使用 Markdown 风格的代码围栏，例如：
 
 ````typst
@@ -111,19 +117,19 @@ typst compile report.typ report.pdf
 ]
 ````
 
-报告中的图片使用相对于项目根目录的路径，例如：
+报告中的图片使用相对于项目根目录的路径。建议将图片放入 `assets/`，例如：
 
 ```typst
 #image("assets/example.png", width: 80%)
 ```
 
-如果修改了报告版式或正文结构，建议同时检查 PDF 和 DOCX 的分页、字体、表格边框及图片位置。
+如果修改了报告版式或正文结构，建议重新运行 `make all`，并检查 PDF 和 DOCX 的分页、字体、表格边框及图片位置。
 
 ## 常用命令
 
 ```text
 make pdf    编译 report.typ，生成 report.pdf
-make docx   根据 PDF 生成 report.docx，并恢复可编辑表头布局
+make docx   先生成 PDF，再生成 report.docx，并恢复可编辑表头布局
 make all    依次生成 PDF 和 DOCX
 make clean  删除生成文件及转换缓存
 make help   查看命令说明
