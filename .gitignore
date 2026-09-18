@@ -1,0 +1,24 @@
+# Generated report files
+/report.pdf
+/report.docx
+
+# Typst and document build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.tmp
+/build/
+/dist/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.#*
+*~
+.vscode/
+.idea/
+
+# Local Python cache
+__pycache__/
+*.py[cod]
