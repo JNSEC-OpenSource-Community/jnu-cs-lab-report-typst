@@ -840,18 +840,26 @@ def _normalize_code_paragraphs(document):
     code_active = False
     source_markers = ("/* 实验1.1：", "/* 实验1.2：", "/* 实验1.3：")
     section_markers = ("2. 动态分配顺序表及算法", "3. 顺序表的普通合并与有序归并", "运行情况：")
+    code_hint = re.compile(
+        r"(?:#(?:include|define)|\b(?:typedef|struct|int|void|char|float|double|"
+        r"Status|LinkList|ElemType|printf|scanf|malloc|free|return|while|for|if)\b|"
+        r"->|[{};])"
+    )
     for paragraph in paragraphs:
         text = paragraph.text
+        stripped = text.strip()
         if any(marker in text for marker in source_markers):
             code_active = True
         elif any(text.strip().startswith(marker) for marker in section_markers):
             code_active = False
+        elif not code_active and code_hint.search(text):
+            code_active = True
         if not code_active or not text:
             continue
-
-        _clear_paragraph(paragraph)
-        _format_code_paragraph(paragraph)
-        _add_highlighted_code(paragraph, text, "c")
+        if re.fullmatch(r"实验\s*\d+", stripped):
+            continue
+        for run in paragraph.runs:
+            _set_code_run_font(run)
 
 
 def _restore_wide_table(table, values, allow_header_rebuild=False):
